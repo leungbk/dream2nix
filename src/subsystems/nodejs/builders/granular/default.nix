@@ -162,10 +162,19 @@
 
       deps = getDependencies name version;
 
+      cyclicDeps = getCyclicDependencies name version;
+
       nodeDeps =
         lib.forEach
         deps
         (dep: allPackages."${dep.name}"."${dep.version}");
+
+      cyclicNodeDeps =
+        lib.forEach
+        cyclicDeps
+        (dep: allPackages."${dep.name}"."${dep.version}");
+
+      allNodeDeps = nodeDeps ++ cyclicNodeDeps;
 
       # Derivation building the ./node_modules directory in isolation.
       # This is used for the devShell of the current package.
@@ -174,7 +183,7 @@
         # symlink direct dependencies to ./node_modules
         mkdir $out
         ${l.concatStringsSep "\n" (
-          l.forEach nodeDeps
+          l.forEach allNodeDeps
           (pkg: ''
             for dir in $(ls ${pkg}/lib/node_modules/); do
               if [[ $dir == @* ]]; then
