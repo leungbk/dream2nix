@@ -79,14 +79,10 @@ in {
     ...
   }: let
     stackLockUtils = import ./utils.nix {inherit dlib lib pkgs;};
-    all-cabal-hashes = let
-      all-cabal-hashes' = pkgs.runCommandLocal "all-cabal-hashes" {} ''
-        mkdir $out
-        cd $out
-        tar --strip-components 1 -xf ${pkgs.all-cabal-hashes}
-      '';
-      names = dlib.listDirs all-cabal-hashes';
-      getVersions = name: dlib.listDirs "${all-cabal-hashes'}/${name}";
+    all-cabal-json = let
+      all-cabal-json' = inputs.all-cabal-json;
+      names = dlib.listDirs all-cabal-json';
+      getVersions = name: dlib.listDirs "${all-cabal-json'}/${name}";
     in
       l.genAttrs names
       (name:
@@ -94,7 +90,7 @@ in {
         (getVersions name)
         (
           version:
-            (l.fromJSON (l.readFile "${all-cabal-hashes'}/${name}/${version}/${name}.json"))
+            (l.fromJSON (l.readFile "${all-cabal-json'}/${name}/${version}/${name}.hashes.json"))
             .package-hashes
         ));
   in
@@ -292,7 +288,7 @@ in {
           {
             type = "http";
             url = haskellUtils.getHackageUrl finalObj;
-            hash = with finalObj; "sha256:${all-cabal-hashes.${name}.${version}.SHA256}";
+            hash = with finalObj; "sha256:${all-cabal-json.${name}.${version}.SHA256}";
           };
         };
 

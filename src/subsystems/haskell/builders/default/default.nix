@@ -1,4 +1,8 @@
-{lib, ...}: let
+{
+  inputs,
+  lib,
+  ...
+}: let
   l = lib // builtins;
 in {
   type = "pure";
@@ -38,12 +42,6 @@ in {
     ...
   } @ args: let
     b = builtins;
-
-    all-cabal-hashes = pkgs.runCommandLocal "all-cabal-hashes" {} ''
-      mkdir $out
-      cd $out
-      tar --strip-components 1 -xf ${pkgs.all-cabal-hashes}
-    '';
 
     # the main package
     defaultPackage = allPackages."${defaultPackageName}"."${defaultPackageVersion}";
@@ -101,13 +99,13 @@ in {
         }
         /*
         For all transitive dependencies, overwrite cabal file with the one
-        from all-cabal-hashes.
+        from all-cabal-json.
         We want to ensure that the cabal file is the latest revision.
         See: https://github.com/haskell-infra/hackage-trustees/blob/master/revisions-information.md
         */
         // (l.optionalAttrs (name != defaultPackageName) {
           preConfigure = ''
-            cp ${all-cabal-hashes}/${name}/${version}/${name}.cabal ./
+            cp ${inputs.all-cabal-json}/${name}/${version}/${name}.cabal ./
           '';
         })
         # enable tests only for the top-level package
