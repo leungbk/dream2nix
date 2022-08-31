@@ -48,6 +48,12 @@
       url = "github:ipetkov/crane";
       flake = false;
     };
+
+    # required for Haskell subsystem
+    all-cabal-json = {
+      url = "github:nix-community/all-cabal-json/hackage";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -61,7 +67,7 @@
     pre-commit-hooks,
     crane,
     ...
-  } @ inp: let
+  } @ inputs: let
     b = builtins;
     l = lib // builtins;
 
@@ -126,7 +132,7 @@
     externalSources =
       lib.genAttrs
       (lib.attrNames externalPaths)
-      (inputName: inp."${inputName}");
+      (inputName: inputs."${inputName}");
 
     overridesDirs = [(toString ./overrides)];
 
@@ -134,7 +140,7 @@
     dream2nixFor = forAllSystems (system: pkgs:
       import ./src rec {
         externalDir = externalDirFor."${system}";
-        inherit externalPaths externalSources lib pkgs;
+        inherit inputs externalPaths externalSources lib pkgs;
         config = {
           inherit overridesDirs;
         };
@@ -152,7 +158,7 @@
     # Produces flake-like output schema.
     d2n-lib =
       (import ./src/lib.nix {
-        inherit externalPaths externalSources overridesDirs lib;
+        inherit inputs externalPaths externalSources overridesDirs lib;
         nixpkgsSrc = "${nixpkgs}";
       })
       # system specific dream2nix library
@@ -239,7 +245,7 @@
     # a dev shell for working on dream2nix
     # use via 'nix develop . -c $SHELL'
     devShells = forAllSystems (system: pkgs: let
-      makeDevshell = import "${inp.devshell}/modules" pkgs;
+      makeDevshell = import "${inputs.devshell}/modules" pkgs;
       mkShell = config:
         (makeDevshell {
           configuration = {

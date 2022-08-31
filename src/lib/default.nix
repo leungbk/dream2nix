@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   ...
@@ -53,7 +54,7 @@
   translators = import ./translators.nix {inherit dlib lib;};
   indexers = import ./indexers.nix {inherit dlib lib;};
 
-  modules = import ./modules.nix {inherit config dlib lib;};
+  modules = import ./modules.nix {inherit inputs config dlib lib;};
 
   simpleTranslate2 =
     import ./simpleTranslate2.nix {inherit dlib lib;};

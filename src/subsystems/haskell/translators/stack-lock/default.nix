@@ -1,4 +1,5 @@
 {
+  inputs,
   dlib,
   lib,
   ...
@@ -153,7 +154,7 @@ in {
         (rawObj: dlib.nameVersionPair rawObj.name rawObj.version)
         serializedRawObjects;
 
-      haskellUtils = import ../utils.nix {inherit lib pkgs;};
+      haskellUtils = import ../utils.nix {inherit inputs lib pkgs;};
 
       cabalData =
         haskellUtils.batchFindJsonFromCabalCandidates

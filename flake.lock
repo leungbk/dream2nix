@@ -22,6 +22,23 @@
         "type": "github"
       }
     },
+    "all-cabal-json": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1662010257,
+        "narHash": "sha256-MWuYhEcNYfmzCU/Flv+6AsOPiRXxKB3GcI+EgJnJnBA=",
+        "owner": "nix-community",
+        "repo": "all-cabal-json",
+        "rev": "693db6ded981ea5894bfe1c044c2eac7d65b813d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "hackage",
+        "repo": "all-cabal-json",
+        "type": "github"
+      }
+    },
     "crane": {
       "flake": false,
       "locked": {
@@ -196,6 +213,7 @@
     "root": {
       "inputs": {
         "alejandra": "alejandra",
+        "all-cabal-json": "all-cabal-json",
         "crane": "crane",
         "devshell": "devshell",
         "flake-utils-pre-commit": "flake-utils-pre-commit",

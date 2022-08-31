@@ -3,6 +3,7 @@
 # If the intention is to generate output for several systems,
 # use ./lib.nix instead.
 {
+  inputs,
   pkgs ? import <nixpkgs> {},
   lib ? pkgs.lib,
   nix ? pkgs.nix,
@@ -46,6 +47,7 @@ in let
 
   dlib = import ./lib {
     inherit lib;
+    inherit inputs;
     config = (import ./utils/config.nix).loadConfig config;
     inherit framework;
   };
@@ -58,6 +60,7 @@ in let
     # TODO: remove specialArgs once all functionality is moved to /src/modules
     specialArgs = {
       inherit
+        inputs
         callPackageDream
         dlib
         ;
@@ -85,6 +88,7 @@ in let
       inherit fetchers;
       inherit framework;
       inherit indexers;
+      inherit inputs;
       inherit dream2nixWithExternals;
       inherit utils;
       inherit nix;

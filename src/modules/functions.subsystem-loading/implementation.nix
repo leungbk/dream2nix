@@ -7,6 +7,7 @@ modules:
   /src/subsystems/{subsystem}/{module-type}/{module-name}
 */
 {
+  inputs,
   config,
   dlib,
   callPackageDream,
@@ -42,7 +43,7 @@ modules:
   import_ = collectedModules:
     lib.mapAttrs
     (name: description:
-      (import description.path {inherit dlib lib;})
+      (import description.path {inherit inputs dlib lib;})
       // {inherit (description) name subsystem;})
     (lib.listToAttrs collectedModules);
 
