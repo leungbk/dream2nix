@@ -56,7 +56,7 @@
       then l.throw configFuncMsg
       else if isAttrs decl
       then decl
-      else import decl {inherit config dlib lib;};
+      else import decl {inherit inputs config dlib lib;};
     # extra attrset itself
     # config.extra is imported here if it's a path
     extra = importDecl _extra;
